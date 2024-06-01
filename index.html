@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+                        <!--This Source code By Priyank Lathiya  -->
+<body>
+    <div class="main-box">
+        <div class="all-display">
+            <table>
+                <tr>
+                    <td><input type="text" id="display-3" placeholder="First Value" disabled></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="display-2" placeholder="Oparator" disabled></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="display-1" placeholder="0"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="all-button">
+            <table>
+                <tr>
+                    <td><button class="calc-btn" onclick="AllDelete()">AC</button></td>
+                    <td><button class="calc-btn" onclick="singleDelete()">Del</button></td>
+                    <td><button class="calc-btn" onclick="oprator(value='%')">%</button></td>
+                    <td><button class="calc-btn" onclick="oprator(value='/')">/</button></td>
+                </tr>
+                <tr>
+                    <td><button class="calc-btn" onclick="getvalue(value='7')">7</button></td>
+                    <td><button class="calc-btn" onclick="getvalue(value='8')">8</button></td>
+                    <td><button class="calc-btn" onclick="getvalue(value='9')">9</button></td>
+                    <td><button class="calc-btn" onclick="oprator(value='*')">*</button></td>
+                </tr>
+                <tr>
+                    <td><button class="calc-btn" onclick="getvalue(value='4')">4</button></td>
+                    <td><button class="calc-btn" onclick="getvalue(value='5')">5</button></td>
+                    <td><button class="calc-btn" onclick="getvalue(value='6')">6</button></td>
+                    <td><button class="calc-btn" onclick="oprator(value='-')">-</button></td>
+                </tr>
+                <tr>
+                    <td><button class="calc-btn" onclick="getvalue(value='1')">1</button></td>
+                    <td><button class="calc-btn" onclick="getvalue(value='2')">2</button></td>
+                    <td><button class="calc-btn" onclick="getvalue(value='3')">3</button></td>
+                    <td><button class="calc-btn" onclick="oprator(value='+')">+</button></td>
+                </tr>
+                <tr>
+                    <td><button class="calc-btn" onclick="getvalue(value='00')">00</button></td>
+                    <td><button class="calc-btn" onclick="getvalue(value='0')">0</button></td>
+                    <td><button class="calc-btn" onclick="decimalFun(value='.')">.</button></td>
+                    <td><button class="calc-btn" onclick="equal()">=</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+    let dis1 = document.getElementById('display-1');
+    let dis2 = document.getElementById('display-2');
+    let dis3 = document.getElementById('display-3');
+    let tempNum = "";
+    let total = "";
+    let multyStr = "";
+    let oprFlag = 0;
+    let equlVar = "";
+    let multyOprFlag = "";
+
+    function getvalue(number) {
+        tempNum += number
+        dis1.value = tempNum;
+    }
+    function oprator(opr) {
+        if (dis1.value.endsWith(".")) {
+            console.log("decimal in operator");
+        } else {
+            multyStr += [opr];
+            if (oprFlag >= 1) {
+                multyOprFlag += [opr];
+
+                if (multyOprFlag.length > 1 && dis3.value != "") {
+                    console.log("inner");
+                } else {
+                    equlVar = dis1.value;
+                    dis3.value = equlVar;
+                    dis1.value = "";
+                    tempNum = "";
+                }
+            }
+
+            if (multyStr.length > 1 && dis1.value != "") {
+
+                let temparry = multyStr.split("");
+                dis1.value = calculation(temparry[temparry.length - 2]);
+            }
+
+            if (dis1.value == "" && dis3.value != "") {
+                dis2.value = opr;
+            } else {
+                dis2.value = opr;
+                dis3.value = dis1.value;
+                dis1.value = "";
+                tempNum = "";
+            }
+
+        }
+    }
+    function calculation(expression) {
+        val1 = parseFloat(dis1.value);
+        val3 = parseFloat(dis3.value);
+
+        switch (expression) {
+            case '+':
+                total = val1 + val3;
+                break;
+
+            case '-':
+                total = val3 - val1;
+                break;
+
+            case '*':
+                total = val1 * val3;
+                break;
+
+            case '/':
+                total = val3 / val1;
+                break;
+        }
+        return total;
+    }
+    function equal() {
+        expression = dis2.value;
+        dis1.value = calculation(expression);
+        dis2.value = "";
+        dis3.value = "";
+        oprFlag++;
+    }
+    function AllDelete() {
+        dis1.value = "";
+        dis2.value = "";
+        dis3.value = "";
+        tempNum = "";
+    }
+    function singleDelete() {
+        let temp = dis1.value;
+        let data1 = "";
+        for (let i = 0; i < temp.length; i++) {
+            if (i < temp.length - 1) {
+                data1 += temp[i];
+            }
+        }
+        dis1.value = data1;
+        tempNum = data1;
+    }
+    let Decval1 = "";
+    let DecFlag = 0;
+    let mltdec = "";
+    function decimalFun(val) {
+        Decval1 = dis1.value + val;
+
+        if (dis3.value != "") {
+            DecFlag = 0;
+        }
+
+        for (let i = 0; i < Decval1.length; i++) {
+            if (Decval1[i] == ".") {
+                DecFlag++;
+
+                if (DecFlag > 1) {
+                    mltdec = Decval1.replace(".", "");
+                    tempNum = mltdec;
+                    dis1.value = mltdec;
+                }
+                else {
+                    tempNum = Decval1;
+                    dis1.value = Decval1;
+                }
+            }
+        }
+    }
+
+    function handleKeyDown(event) {
+        // Define a map of numpad keys and their corresponding values
+        const numpadKeyMap = {
+            'Numpad0': '0',
+            'Numpad1': '1',
+            'Numpad2': '2',
+            'Numpad3': '3',
+            'Numpad4': '4',
+            'Numpad5': '5',
+            'Numpad6': '6',
+            'Numpad7': '7',
+            'Numpad8': '8',
+            'Numpad9': '9',
+            'NumpadAdd': '+',
+            'NumpadSubtract': '-',
+            'NumpadMultiply': '*',
+            'NumpadDivide': '/',
+            'NumpadDecimal': '.',
+            'NumpadEnter': '=',
+            'Enter': '=',
+            'Backspace': 'Backspace',
+            'Escape': 'Escape'
+        };
+
+        // Check if the pressed key is in the map
+        if (numpadKeyMap.hasOwnProperty(event.code)) {
+            const value = numpadKeyMap[event.code];
+            if (value === '=') {
+                equal();
+            } else if (value === "+" || value === "-" || value === "*" || value === "/") {
+                oprator(value);
+            } else if (value === "Backspace") {
+                singleDelete();
+            } else if (value === "Escape") {
+                AllDelete();
+            } else if (value === ".") {
+                decimalFun(value);
+            }
+            else {
+                getvalue(value);
+            }
+
+            // Prevent default action to avoid unexpected behavior
+            event.preventDefault();
+        }
+    }
+
+    // Add event listener for keydown events
+    document.addEventListener('keydown', handleKeyDown);
+</script>
+
+</html>
