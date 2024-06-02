@@ -133,11 +133,16 @@
         return total;
     }
     function equal() {
+        if(dis1.value == "" && dis3.value != "") {
+            alert("please enter the number ");
+        }
+        else {
         expression = dis2.value;
         dis1.value = calculation(expression);
         dis2.value = "";
         dis3.value = "";
         oprFlag++;
+        }
     }
     function AllDelete() {
         dis1.value = "";
